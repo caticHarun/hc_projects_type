@@ -28,10 +28,32 @@ function hc_projects_type_uninstall()
 if (!class_exists('hc_projects_type_plugin')) {
     class hc_projects_type_plugin
     {
+        private $post_type = "hc_projects_type";
+
+        private function register_post_type()
+        {
+            register_post_type(
+                $this->post_type,
+                [
+                    "label"         => __("Projects"),
+                    "lables"        => [],
+                    "description"   => "Projects Post Type",
+                    "public"        => true,
+                    "supports"      => ["title", "editor", "thumbnail",],
+                    "has_archive"   => true,
+                    "rewrite" => [
+                        "slug" => "project"
+                    ]
+                ]
+            );
+        }
 
         //Construct
-        private function __construct()
+        public function __construct()
         {
+            add_action( 'init', function(){
+                $this->register_post_type();
+            } );
         }
     }
 
