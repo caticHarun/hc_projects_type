@@ -49,7 +49,6 @@ if (!class_exists('hc_projects_type_plugin')) {
                 ]
             );
         }
-        //Adding Custom Fields
         public function add_custom_fields()
         {
             add_meta_box(
@@ -98,6 +97,14 @@ if (!class_exists('hc_projects_type_plugin')) {
             }
         }
 
+        //Disabling Indexing
+        public function disable_projects_indexing()
+        {
+            if (is_post_type_archive($this->post_type) || is_singular($this->post_type)) {
+                echo '<meta name="robots" content="noindex, nofollow">' . "\n";
+            }
+        }
+
 
         //Construct
         public function __construct()
@@ -107,6 +114,7 @@ if (!class_exists('hc_projects_type_plugin')) {
             $this->service_field_id = $this->post_type . "_service_field";
 
             //Hooks
+            add_action('wp_head', [$this, 'disable_projects_indexing']);
             add_action('init', [$this, "register_post_type"]);
             add_action('add_meta_boxes', [$this, 'add_custom_fields']);
             add_action('save_post', [$this, 'save_service_field']);
