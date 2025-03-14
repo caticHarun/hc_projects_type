@@ -35,11 +35,38 @@ if (!class_exists('hc_projects_type_plugin')) {
 
         public function register_post_type()
         {
+            $labels = [
+                'name'                  => __('Projects', ),
+                'singular_name'         => __('Project', ),
+                'menu_name'             => __('Projects', ),
+                'name_admin_bar'        => __('Project', ),
+                'add_new'               => __('Add New', ),
+                'add_new_item'          => __('Add New Project', ),
+                'new_item'              => __('New Project', ),
+                'edit_item'             => __('Edit Project', ),
+                'view_item'             => __('View Project', ),
+                'all_items'             => __('All Projects', ),
+                'search_items'          => __('Search Projects', ),
+                'parent_item_colon'     => __('Parent Project:', ),
+                'not_found'             => __('No projects found.', ),
+                'not_found_in_trash'    => __('No projects found in Trash.', ),
+                'featured_image'        => __('Project Featured Image', ),
+                'set_featured_image'    => __('Set featured image', ),
+                'remove_featured_image' => __('Remove featured image', ),
+                'use_featured_image'    => __('Use as featured image', ),
+                'archives'              => __('Project Archives', ),
+                'insert_into_item'      => __('Insert into project', ),
+                'uploaded_to_this_item' => __('Uploaded to this project', ),
+                'filter_items_list'     => __('Filter projects list', ),
+                'items_list_navigation' => __('Projects list navigation', ),
+                'items_list'            => __('Projects list', ),
+            ];
+
             register_post_type(
                 $this->post_type,
                 [
                     "label" => __("Projects"),
-                    "lables" => [],
+                    "labels" => $labels,
                     "description" => "Projects Post Type",
                     "public" => true,
                     "supports" => ["title", "editor", "thumbnail",],
@@ -124,7 +151,7 @@ if (!class_exists('hc_projects_type_plugin')) {
             echo '</ul>';
             echo '</div>';
 
-            echo '<button type="button" class="button button-primary" id="add-gallery-images">' . __('Add Images', 'textdomain') . '</button>';
+            echo '<button type="button" class="button button-primary" id="add-gallery-images">' . __('Add Images', ) . '</button>';
             echo '<input type="hidden" id="gallery-images" name="gallery_images" value="' . esc_attr(implode(',', $gallery_images)) . '">';
             ?>
             <script>
