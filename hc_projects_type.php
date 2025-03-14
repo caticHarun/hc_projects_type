@@ -148,7 +148,7 @@ if (!class_exists('hc_projects_type_plugin')) {
                         mediaUploader = wp.media({
                             title: "Select Images",
                             button: { text: "Add to Gallery" },
-                            multiple: true
+                            multiple: "add"
                         });
 
                         mediaUploader.on("open", function () {
@@ -161,33 +161,10 @@ if (!class_exists('hc_projects_type_plugin')) {
                                 attachment.fetch(); // Fetch attachment data
                                 selection.add(attachment);
                             });
-
-                            // ✅ Force multi-select behavior by overriding click action
-                            let frame = mediaUploader;
-                            let library = frame.state().get("library");
-
-                            library.on("reset", function () {
-                                console.log('haarun'); //HC_REMOVE
-                                frame.content.get().$('.attachment').each(function () {
-                                    console.log('haarun'); //HC_REMOVE
-                                    let attachment = $(this);
-                                    attachment.off("click").on("click", function (e) {
-                                        e.preventDefault(); // Prevent default deselect behavior
-                                        let attachmentID = attachment.data("id");
-                                        let selection = frame.state().get("selection");
-
-                                        let model = library.get(attachmentID);
-                                        if (!selection.has(model)) {
-                                            selection.add(model);
-                                        }
-                                    });
-                                });
-                            });
                         })
 
                         mediaUploader.on("select", function () {
                             const selection = mediaUploader.state().get("selection");
-                            console.log('selection', selection); //HC_REMOVE
                             let imageIDs = [];
                             galleryPreview.innerHTML = ""; // Clear existing previews
 
@@ -231,8 +208,6 @@ if (!class_exists('hc_projects_type_plugin')) {
                         });
                         galleryInput.value = imageIDs.join(",");
                     }
-
-                    console.log('harun'); //HC_REMOVE
 
                     // Enable drag-and-drop sorting
                     new Sortable(galleryPreview, {
