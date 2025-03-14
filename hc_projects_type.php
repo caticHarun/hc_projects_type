@@ -3,7 +3,7 @@
 Plugin Name: HC Projects
 Description: Adding Project Single Type
 Version: 1.0.0
-Author: Harun Catic
+Author: catic.harun@gmail.com
 */
 
 // Activation
