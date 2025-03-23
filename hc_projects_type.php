@@ -282,6 +282,57 @@ if (!class_exists('hc_projects_type_plugin')) {
             }
         }
 
+        //Adding a slider
+        public function projects_slider() {
+            // RETURN VALUE
+            $ret = "";
+
+            // REQUIRE
+            // require plugin_dir_path(__FILE__) . '/templates/sliders/firstSlider/firstSlider.min.php'; //HC_UPDATE uncomment
+            require plugin_dir_path(__FILE__) . '/templates/slider.php';
+            // require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.min.php'; //HC_UPDATE uncomment
+            require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.php';
+            
+            //Items
+            $items = [];
+
+            //Getting projects
+            $query = new WP_Query([
+                'post_type'      => $this->post_type,
+                'posts_per_page' => 6,
+                'post_status'    => 'publish',
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+            ]);
+
+            $posts = $query->posts;
+
+            for($i=0; $i<count($posts); $i++){
+                $post = $posts[$i];
+                $service = get_post_meta($post->ID, $this->service_field_id, true);
+
+                // var_dump($p);
+
+                ob_start();
+                new hc_single_project_thumbnail(
+                    $post->guid,
+                    $post->post_title,
+                    $service,
+                    get_the_post_thumbnail_url($post->ID)
+                );
+                $single = ob_get_clean();
+
+                $items[] = $single;
+            }
+
+            ob_start();
+            new HC_HTML_slider_template(
+                1,
+                $items
+            );
+
+            return ob_get_clean();
+        }
 
         //Construct
         public function __construct()
@@ -298,6 +349,9 @@ if (!class_exists('hc_projects_type_plugin')) {
             add_action('save_post', [$this, 'save_service_field']);
             add_action('save_post', [$this, 'save_gallery_field']);
             add_action('admin_enqueue_scripts', [$this, "enqueue_wp_media_uploader"]);
+
+            //Shortcodes
+            add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
         }
     }
 
