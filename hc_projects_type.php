@@ -300,7 +300,8 @@ if (!class_exists('hc_projects_type_plugin')) {
             //Getting projects
             $query = new WP_Query([
                 'post_type' => $this->post_type,
-                'posts_per_page' => 6,
+                // 'posts_per_page' => 6, //HC_UPDATE uncomment
+                'posts_per_page' => 2,
                 'post_status' => 'publish',
                 'orderby' => 'date',
                 'order' => 'DESC',
