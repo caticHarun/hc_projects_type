@@ -23,6 +23,9 @@ class hc_single_project_thumbnail
                 order: 3;
                 font-size: 15px;
                 font-family: "Inter", Sans-serif;
+                color: #F5F5F5;
+                padding: 5px 15px;
+                font-weight: 500;;
             }
 
             .single_project_thumbnail_container>.service {

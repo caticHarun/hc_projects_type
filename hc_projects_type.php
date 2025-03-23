@@ -345,7 +345,7 @@ if (!class_exists('hc_projects_type_plugin')) {
             <style>
                 .hc_projects_slider_container {
                     background-color: #1B1B1B;
-                    padding: 80px 20px;
+                    padding: 40px 20px;
                     width: 100%;
                 }
 
