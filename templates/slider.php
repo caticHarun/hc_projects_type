@@ -112,6 +112,8 @@ class HC_HTML_slider_template
                 let scrolling = false;
                 let resizeFunc;
                 let interval;
+                let setMoveInterval;
+                let intervalClearedInMouseEnter = false;
 
                 const scrollFunc = async () => {
                     let intersect = isInViewport(slider);
@@ -163,10 +165,26 @@ class HC_HTML_slider_template
 
                     await delay(<?= $first_timeout_speed ?>);
                     moveSlider();
-                    interval = setInterval(moveSlider, <?= $interval_speed+$transition_speed ?>);
+                    setMoveInterval = () => {
+                        interval = setInterval(moveSlider, <?= $interval_speed+$transition_speed ?>);
+                    };
+                    setMoveInterval();
                 };
                 scrollFunc();
                 document.addEventListener("scroll", scrollFunc)
+
+                slider.addEventListener("mouseenter", ()=>{
+                    if(interval && !intervalClearedInMouseEnter) {
+                        clearInterval(interval);
+                        intervalClearedInMouseEnter = true;
+                    }
+                })
+                slider.addEventListener("mouseleave", ()=>{
+                    if(setMoveInterval && intervalClearedInMouseEnter) {
+                        setMoveInterval();
+                        intervalClearedInMouseEnter = false; 
+                    }
+                })
             })
         </script>
 
