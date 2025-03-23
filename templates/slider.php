@@ -119,13 +119,7 @@ class HC_HTML_slider_template
                     const slides = document.querySelectorAll(".<?= $this->slide_id ?>");
                     let slideWidth = slides[0].offsetWidth; // Slide width + margin
 
-                    console.log('slider', slider.offsetWidth); //HC_REMOVE
-                    console.log('slide', slideWidth); //HC_REMOVE
-
                     const minSlides = Math.floor(slider.offsetWidth/slideWidth)
-                    console.log('min slides', minSlides, slides.length); //HC_REMOVE
-    
-                    console.log('ret',  ); //HC_REMOVE
 
                     return slides.length > minSlides;
                 }
@@ -159,8 +153,6 @@ class HC_HTML_slider_template
                     let slideWidth = slides[0].offsetWidth; // Slide width + margin
 
                     resizeFunc = () => {
-                        console.log('resize'); //HC_REMOVE
-
                         const slides = document.querySelectorAll(".<?= $this->slide_id ?>");
                         slideWidth = slides[0].offsetWidth;
                         index = 0;
