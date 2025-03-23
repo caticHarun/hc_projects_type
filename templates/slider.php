@@ -69,9 +69,9 @@ class HC_HTML_slider_template
 
                     <?= ".$this->slide_id" ?>
                         {
-                        <?= "width: " . $point["width"] . ";" ?>
-                        <?= "min-width: " . $point["width"] . ";" ?>
-                        <?= "max-width: " . $point["width"] . ";" ?>
+                        <?= "width: " . $point["width"] . "!important;" ?>
+                        <?= "min-width: " . $point["width"] . "!important;" ?>
+                        <?= "max-width: " . $point["width"] . "!important;" ?>
                     }
                 }
 

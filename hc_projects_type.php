@@ -36,30 +36,30 @@ if (!class_exists('hc_projects_type_plugin')) {
         public function register_post_type()
         {
             $labels = [
-                'name'                  => __('Projects', ),
-                'singular_name'         => __('Project', ),
-                'menu_name'             => __('Projects', ),
-                'name_admin_bar'        => __('Project', ),
-                'add_new'               => __('Add New', ),
-                'add_new_item'          => __('Add New Project', ),
-                'new_item'              => __('New Project', ),
-                'edit_item'             => __('Edit Project', ),
-                'view_item'             => __('View Project', ),
-                'all_items'             => __('All Projects', ),
-                'search_items'          => __('Search Projects', ),
-                'parent_item_colon'     => __('Parent Project:', ),
-                'not_found'             => __('No projects found.', ),
-                'not_found_in_trash'    => __('No projects found in Trash.', ),
-                'featured_image'        => __('Project Featured Image', ),
-                'set_featured_image'    => __('Set featured image', ),
+                'name' => __('Projects', ),
+                'singular_name' => __('Project', ),
+                'menu_name' => __('Projects', ),
+                'name_admin_bar' => __('Project', ),
+                'add_new' => __('Add New', ),
+                'add_new_item' => __('Add New Project', ),
+                'new_item' => __('New Project', ),
+                'edit_item' => __('Edit Project', ),
+                'view_item' => __('View Project', ),
+                'all_items' => __('All Projects', ),
+                'search_items' => __('Search Projects', ),
+                'parent_item_colon' => __('Parent Project:', ),
+                'not_found' => __('No projects found.', ),
+                'not_found_in_trash' => __('No projects found in Trash.', ),
+                'featured_image' => __('Project Featured Image', ),
+                'set_featured_image' => __('Set featured image', ),
                 'remove_featured_image' => __('Remove featured image', ),
-                'use_featured_image'    => __('Use as featured image', ),
-                'archives'              => __('Project Archives', ),
-                'insert_into_item'      => __('Insert into project', ),
+                'use_featured_image' => __('Use as featured image', ),
+                'archives' => __('Project Archives', ),
+                'insert_into_item' => __('Insert into project', ),
                 'uploaded_to_this_item' => __('Uploaded to this project', ),
-                'filter_items_list'     => __('Filter projects list', ),
+                'filter_items_list' => __('Filter projects list', ),
                 'items_list_navigation' => __('Projects list navigation', ),
-                'items_list'            => __('Projects list', ),
+                'items_list' => __('Projects list', ),
             ];
 
             register_post_type(
@@ -283,31 +283,32 @@ if (!class_exists('hc_projects_type_plugin')) {
         }
 
         //Adding a slider
-        public function projects_slider() {
-            // RETURN VALUE
-            $ret = "";
+        public function projects_slider()
+        {
+            //Values
+            $maxWidth = apply_filters('hc_projects_slider_max_width', 1400);
 
             // REQUIRE
             // require plugin_dir_path(__FILE__) . '/templates/sliders/firstSlider/firstSlider.min.php'; //HC_UPDATE uncomment
             require plugin_dir_path(__FILE__) . '/templates/slider.php';
             // require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.min.php'; //HC_UPDATE uncomment
             require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.php';
-            
+
             //Items
             $items = [];
 
             //Getting projects
             $query = new WP_Query([
-                'post_type'      => $this->post_type,
+                'post_type' => $this->post_type,
                 'posts_per_page' => 6,
-                'post_status'    => 'publish',
-                'orderby'        => 'date',
-                'order'          => 'DESC',
+                'post_status' => 'publish',
+                'orderby' => 'date',
+                'order' => 'DESC',
             ]);
 
             $posts = $query->posts;
 
-            for($i=0; $i<count($posts); $i++){
+            for ($i = 0; $i < count($posts); $i++) {
                 $post = $posts[$i];
                 $service = get_post_meta($post->ID, $this->service_field_id, true);
 
@@ -326,10 +327,68 @@ if (!class_exists('hc_projects_type_plugin')) {
             }
 
             ob_start();
-            new HC_HTML_slider_template(
-                1,
-                $items
-            );
+            ?>
+            <div class="hc_projects_slider_container">
+                <div>
+                    <div class="h2">
+                        <h2><?= __("Projects") ?></h2>
+                        <a href="<?=get_post_type_archive_link($this->post_type)?>"><?= __("Show All") ?></a>
+                    </div>
+                    <?php
+                    new HC_HTML_slider_template(
+                        1,
+                        $items
+                    );
+                    ?>
+                </div>
+            </div>
+            <style>
+                .hc_projects_slider_container {
+                    background-color: #1B1B1B;
+                    padding: 80px 20px;
+                    width: 100%;
+                }
+
+                .hc_projects_slider_container>div {
+                    max-width: <?= $maxWidth ?>px;
+                    margin: 0 auto;
+                }
+
+                .hc_projects_slider_container .h2 {
+                    color: #F5F5F5;
+                    max-width: 1000px;
+                    margin: 0 auto;
+                    font-family: "Albert Sans", Sans-serif;
+                    font-size: 40px;
+                    padding-bottom: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    justify-content: space-between;
+                }
+
+                .hc_projects_slider_container .h2>a {
+                    color: white;
+                    border: none;
+                    color: #1B1B1B;
+                    background-color: #F5F5F5;
+                    font-size: 14px;
+                    font-family: "Inter", Sans-serif;
+                    font-weight: 500;
+                    padding: 5px 30px;
+                    display: block;
+                    border-radius: 5px;
+                }
+                .hc_projects_slider_container .h2>a:hover {
+                    background-color: lightgray;
+                }
+                @media screen and (max-width: 400px) {
+                    .hc_projects_slider_container .h2 h2 {
+                        font-size: 25px !important;
+                    }
+                }
+            </style>
+            <?php
 
             return ob_get_clean();
         }
