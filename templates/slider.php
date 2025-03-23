@@ -34,7 +34,7 @@ class HC_HTML_slider_template
             ["breakpoint" => 700, "width" => "100%"],
         ],
         $transition_speed = 1500,
-        $interval_speed = 2000,
+        $interval_speed = 1000,
         $first_timeout_speed = 1000
     ) {
         $this->id = $id;
@@ -163,7 +163,7 @@ class HC_HTML_slider_template
 
                     await delay(<?= $first_timeout_speed ?>);
                     moveSlider();
-                    interval = setInterval(moveSlider, <?= $interval_speed ?>);
+                    interval = setInterval(moveSlider, <?= $interval_speed+$transition_speed ?>);
                 };
                 scrollFunc();
                 document.addEventListener("scroll", scrollFunc)
