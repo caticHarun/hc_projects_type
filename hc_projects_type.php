@@ -337,7 +337,8 @@ if (!class_exists('hc_projects_type_plugin')) {
                     <?php
                     new HC_HTML_slider_template(
                         1,
-                        $items
+                        $items,
+                        "calc(2/7 * 100%)"
                     );
                     ?>
                 </div>

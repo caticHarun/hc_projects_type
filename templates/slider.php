@@ -9,7 +9,7 @@ class HC_HTML_slider_template
     public function singleItem($i)
     {
         ?>
-        <div class="<?= $this->slide_id ?> min-w-1/3 max-w-1/3 w-1/3">
+        <div class="<?= $this->slide_id ?>">
             <?= $i ?>
         </div>
         <?php
@@ -19,6 +19,7 @@ class HC_HTML_slider_template
      * Summary of __construct
      * @param mixed $id = string | number
      * @param mixed $items = array()
+     * @param mixed $defaultWidth default single slide width
      * @param mixed $responsive | breakpoints for single items | = ["breakpoint" => "number", "width" => "string"]
      * @param mixed $transition_speed = number
      * @param mixed $interval_speed = number
@@ -27,8 +28,9 @@ class HC_HTML_slider_template
     public function __construct(
         $id,
         $items = [],
+        $defaultWidth = "calc(1/3 * 100%)",
         $responsive = [
-            ["breakpoint" => 900, "width" => "50%"],
+            ["breakpoint" => 900, "width" => "50%",],
             ["breakpoint" => 700, "width" => "100%"],
         ],
         $transition_speed = 1500,
@@ -56,6 +58,13 @@ class HC_HTML_slider_template
                 transition:
                     <?= "transform " . $transition_speed . "ms ease-in-out" ?>
                 ;
+            }
+
+            <?= ".$this->slide_id" ?>
+                {
+                <?= "width: " . $defaultWidth . "!important;" ?>
+                <?= "min-width: " . $defaultWidth . "!important;" ?>
+                <?= "max-width: " . $defaultWidth . "!important;" ?>
             }
 
             <?php
