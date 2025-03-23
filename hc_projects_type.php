@@ -29,9 +29,9 @@ if (!class_exists('hc_projects_type_plugin')) {
     class hc_projects_type_plugin
     {
         //Registering a custom post type
-        public $post_type;
-        public $service_field_id;
-        public $gallery_field_id;
+        public static $post_type = "hc_projects_type";
+        public static $service_field_id = "hc_projects_type_service_field";
+        public static $gallery_field_id = "hc_projects_type_gallery_field";
 
         public function register_post_type()
         {
@@ -63,7 +63,7 @@ if (!class_exists('hc_projects_type_plugin')) {
             ];
 
             register_post_type(
-                $this->post_type,
+                self::$post_type,
                 [
                     "label" => __("Projects"),
                     "labels" => $labels,
@@ -80,19 +80,19 @@ if (!class_exists('hc_projects_type_plugin')) {
         public function add_custom_fields()
         {
             add_meta_box(
-                $this->service_field_id,
+                self::$service_field_id,
                 __('Service'),
                 [$this, "render_service_field"],
-                $this->post_type,
+                self::$post_type,
                 'normal',
                 'default'
             );
 
             add_meta_box(
-                $this->gallery_field_id,
+                self::$gallery_field_id,
                 __("Photos"),
                 [$this, "render_gallery_field"],
-                $this->post_type,
+                self::$post_type,
                 'normal',
                 'default'
             );
@@ -100,7 +100,7 @@ if (!class_exists('hc_projects_type_plugin')) {
         public function render_service_field($post)
         {
             // Get the current value of the field
-            $service = get_post_meta($post->ID, $this->service_field_id, true);
+            $service = get_post_meta($post->ID, self::$service_field_id, true);
 
             // Add a nonce field for security
             wp_nonce_field('save_service_meta', 'service_meta_nonce');
@@ -130,12 +130,12 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             // Save the field value
             if (isset($_POST['project_service'])) {
-                update_post_meta($post_id, $this->service_field_id, sanitize_text_field($_POST['project_service']));
+                update_post_meta($post_id, self::$service_field_id, sanitize_text_field($_POST['project_service']));
             }
         }
         public function render_gallery_field($post)
         {
-            $gallery_images = get_post_meta($post->ID, $this->gallery_field_id, true);
+            $gallery_images = get_post_meta($post->ID, self::$gallery_field_id, true);
             $gallery_images = is_array($gallery_images) ? $gallery_images : [];
 
             wp_nonce_field('save_gallery_meta', 'gallery_meta_nonce');
@@ -261,7 +261,7 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             if (isset($_POST['gallery_images'])) {
                 $gallery_images = array_filter(explode(',', sanitize_text_field($_POST['gallery_images'])));
-                update_post_meta($post_id, $this->gallery_field_id, $gallery_images);
+                update_post_meta($post_id, self::$gallery_field_id, $gallery_images);
             }
         }
         public function enqueue_wp_media_uploader($hook)
@@ -277,7 +277,7 @@ if (!class_exists('hc_projects_type_plugin')) {
         //Disabling Indexing
         public function disable_projects_indexing()
         {
-            if (is_post_type_archive($this->post_type) || is_singular($this->post_type)) {
+            if (is_post_type_archive(self::$post_type) || is_singular(self::$post_type)) {
                 echo '<meta name="robots" content="noindex, nofollow">' . "\n";
             }
         }
@@ -299,7 +299,7 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             //Getting projects
             $query = new WP_Query([
-                'post_type' => $this->post_type,
+                'post_type' => self::$post_type,
                 'posts_per_page' => 6,
                 'post_status' => 'publish',
                 'orderby' => 'date',
@@ -310,7 +310,7 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             for ($i = 0; $i < count($posts); $i++) {
                 $post = $posts[$i];
-                $service = get_post_meta($post->ID, $this->service_field_id, true);
+                $service = get_post_meta($post->ID, self::$service_field_id, true);
 
                 // var_dump($p);
 
@@ -332,7 +332,7 @@ if (!class_exists('hc_projects_type_plugin')) {
                 <div>
                     <div class="h2">
                         <h2><?= __("Projects") ?></h2>
-                        <a href="<?=get_post_type_archive_link($this->post_type)?>"><?= __("Show All") ?></a>
+                        <a href="<?= get_post_type_archive_link(self::$post_type) ?>"><?= __("Show All") ?></a>
                     </div>
                     <?php
                     new HC_HTML_slider_template(
@@ -351,7 +351,9 @@ if (!class_exists('hc_projects_type_plugin')) {
                 }
 
                 .hc_projects_slider_container>div {
-                    max-width: <?= $maxWidth ?>px;
+                    max-width:
+                        <?= $maxWidth ?>
+                        px;
                     margin: 0 auto;
                 }
 
@@ -380,9 +382,11 @@ if (!class_exists('hc_projects_type_plugin')) {
                     display: block;
                     border-radius: 5px;
                 }
+
                 .hc_projects_slider_container .h2>a:hover {
                     background-color: lightgray;
                 }
+
                 @media screen and (max-width: 400px) {
                     .hc_projects_slider_container .h2 h2 {
                         font-size: 25px !important;
@@ -394,14 +398,22 @@ if (!class_exists('hc_projects_type_plugin')) {
             return ob_get_clean();
         }
 
+        //Archive Page
+        public function projects_archive_template($template)
+        {
+            if (is_post_type_archive(self::$post_type)) {
+                // $custom_template = plugin_dir_path(__FILE__) . 'templates/archive-project.min.php'; //HC_UPDATE uncomment
+                $custom_template = plugin_dir_path(__FILE__) . 'templates/archive-project.php';
+                if (file_exists($custom_template)) {
+                    return $custom_template;
+                }
+            }
+            return $template;
+        }
+
         //Construct
         public function __construct()
         {
-            //Initialization
-            $this->post_type = "hc_projects_type";
-            $this->service_field_id = $this->post_type . "_service_field";
-            $this->gallery_field_id = $this->post_type . "_gallery_field";
-
             //Hooks
             add_action('wp_head', [$this, 'disable_projects_indexing']);
             add_action('init', [$this, "register_post_type"]);
@@ -412,6 +424,9 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             //Shortcodes
             add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
+
+            //Archive page
+            add_filter('template_include', [$this, 'projects_archive_template']);
         }
     }
 
