@@ -398,6 +398,20 @@ if (!class_exists('hc_projects_type_plugin')) {
             return ob_get_clean();
         }
 
+        //Service Shortcode
+        public function service_code()
+        {
+            global $post;
+            $service = get_post_meta($post->ID, self::$service_field_id, true);
+
+
+            ?>
+            <div class="hc_service">
+                <?php echo esc_attr($service); ?>
+            </div>
+            <?php
+        }
+
         //Construct
         public function __construct()
         {
@@ -411,6 +425,7 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             //Shortcodes
             add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
+            add_shortcode("hc_project_service", [$this, "service_code"]);
         }
     }
 
