@@ -282,120 +282,6 @@ if (!class_exists('hc_projects_type_plugin')) {
             }
         }
 
-        //Adding a slider
-        public function projects_slider()
-        {
-            //Values
-            $maxWidth = apply_filters('hc_projects_slider_max_width', 1400);
-
-            // REQUIRE
-            require plugin_dir_path(__FILE__) . '/templates/slider.min.php';
-            // require plugin_dir_path(__FILE__) . '/templates/slider.php';
-            require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.min.php';
-            // require plugin_dir_path(__FILE__) . '/templates/single_project_thumbnail.php';
-
-            //Items
-            $items = [];
-
-            //Getting projects
-            $query = new WP_Query([
-                'post_type' => self::$post_type,
-                'posts_per_page' => 6,
-                'post_status' => 'publish',
-                'orderby' => 'date',
-                'order' => 'DESC',
-            ]);
-
-            $posts = $query->posts;
-
-            for ($i = 0; $i < count($posts); $i++) {
-                $post = $posts[$i];
-                $service = get_post_meta($post->ID, self::$service_field_id, true);
-
-                ob_start();
-                new hc_single_project_thumbnail(
-                    $post->guid,
-                    $post->post_title,
-                    $service,
-                    get_the_post_thumbnail_url($post->ID)
-                );
-                $single = ob_get_clean();
-
-                $items[] = $single;
-            }
-
-            ob_start();
-            ?>
-            <div class="hc_projects_slider_container">
-                <div>
-                    <div class="h2">
-                        <h2><?= __("Projects") ?></h2>
-                        <a href="<?= get_post_type_archive_link(self::$post_type) ?>"><?= __("Show All") ?></a>
-                    </div>
-                    <?php
-                    new HC_HTML_slider_template(
-                        1,
-                        $items,
-                        "calc(2/7 * 100%)"
-                    );
-                    ?>
-                </div>
-            </div>
-            <style>
-                .hc_projects_slider_container {
-                    background-color: #1B1B1B;
-                    padding: 40px 20px;
-                    width: 100%;
-                }
-
-                .hc_projects_slider_container>div {
-                    max-width:
-                        <?= $maxWidth ?>
-                        px;
-                    margin: 0 auto;
-                }
-
-                .hc_projects_slider_container .h2 {
-                    color: #F5F5F5;
-                    max-width: 1000px;
-                    margin: 0 auto;
-                    font-family: "Albert Sans", Sans-serif;
-                    font-size: 40px;
-                    padding-bottom: 20px;
-                    display: flex;
-                    align-items: center;
-                    gap: 20px;
-                    justify-content: space-between;
-                }
-
-                .hc_projects_slider_container .h2>a {
-                    color: white;
-                    border: none;
-                    color: #1B1B1B;
-                    background-color: #F5F5F5;
-                    font-size: 14px;
-                    font-family: "Inter", Sans-serif;
-                    font-weight: 500;
-                    padding: 5px 30px;
-                    display: block;
-                    border-radius: 5px;
-                }
-
-                .hc_projects_slider_container .h2>a:hover {
-                    background-color: lightgray;
-                }
-
-                @media screen and (max-width: 400px) {
-                    .hc_projects_slider_container .h2 h2 {
-                        font-size: 25px !important;
-                    }
-                }
-            </style>
-            <?php
-
-            return ob_get_clean();
-        }
-
         //Service Shortcode
         public function service_code()
         {
@@ -444,9 +330,8 @@ if (!class_exists('hc_projects_type_plugin')) {
             add_action('admin_enqueue_scripts', [$this, "enqueue_wp_media_uploader"]);
 
             //Shortcodes
-            add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
-            // add_shortcode("hc_project_service", [$this, "service_code"]); //HC_UPDATE uncomment
-            add_shortcode("hc_project_service", [$this, "gallery_code"]);
+            add_shortcode("hc_project_service", [$this, "service_code"]);
+            add_shortcode("hc_project_gallery", [$this, "gallery_code"]);
         }
     }
 
