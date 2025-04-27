@@ -412,6 +412,28 @@ if (!class_exists('hc_projects_type_plugin')) {
             <?php
         }
 
+        public function gallery_code()
+        {
+            global $post;
+            $image_ids = get_post_meta($post->ID, self::$gallery_field_id, true);
+
+            ?>
+            <div class="hc_gallery">
+                <?php
+                foreach ($image_ids as $image_id) {
+                    $image_url = wp_get_attachment_url($image_id);
+
+                    ?>
+                    <div class="hc_single_image">
+                        <img src="<?php echo $image_url ?>" alt="Project photo">
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+            <?php
+        }
+
         //Construct
         public function __construct()
         {
@@ -425,7 +447,8 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             //Shortcodes
             add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
-            add_shortcode("hc_project_service", [$this, "service_code"]);
+            // add_shortcode("hc_project_service", [$this, "service_code"]); //HC_UPDATE uncomment
+            add_shortcode("hc_project_service", [$this, "gallery_code"]);
         }
     }
 
