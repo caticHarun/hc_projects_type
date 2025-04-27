@@ -398,19 +398,6 @@ if (!class_exists('hc_projects_type_plugin')) {
             return ob_get_clean();
         }
 
-        //Archive Page
-        public function projects_archive_template($template)
-        {
-            if (is_post_type_archive(self::$post_type)) {
-                // $custom_template = plugin_dir_path(__FILE__) . 'templates/archive-project.min.php'; //HC_UPDATE uncomment
-                $custom_template = plugin_dir_path(__FILE__) . 'templates/archive-project.php';
-                if (file_exists($custom_template)) {
-                    return $custom_template;
-                }
-            }
-            return $template;
-        }
-
         //Construct
         public function __construct()
         {
@@ -424,9 +411,6 @@ if (!class_exists('hc_projects_type_plugin')) {
 
             //Shortcodes
             add_shortcode("hc_projects_slider", [$this, "projects_slider"]);
-
-            //Archive page
-            add_filter('template_include', [$this, 'projects_archive_template']);
         }
     }
 
