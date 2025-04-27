@@ -250,7 +250,6 @@ if (!class_exists('hc_projects_type_plugin')) {
                         const target = e.target;
                         
                         const ids = String(galleryInput.value).split(",");
-                        console.log('ids', ids); //HC_REMOVE
 
                         const index = ids.findIndex(el => el == target.value);
                         if(index === -1) return;
