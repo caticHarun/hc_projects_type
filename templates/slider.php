@@ -119,13 +119,13 @@ class HC_HTML_slider_template
                     const slides = document.querySelectorAll(".<?= $this->slide_id ?>");
                     let slideWidth = slides[0].offsetWidth; // Slide width + margin
 
-                    const minSlides = Math.floor(slider.offsetWidth/slideWidth)
+                    const minSlides = Math.floor(slider.offsetWidth / slideWidth);
 
                     return slides.length > minSlides;
-                }
+                };
 
                 const scrollFunc = async () => {
-                    if(!sliderActivation()) return;
+                    if (!sliderActivation()) return;
 
                     let intersect = isInViewport(slider);
 
@@ -133,7 +133,7 @@ class HC_HTML_slider_template
                         scrolling = false;
                         if (resizeFunc) {
                             resizeFunc();
-                            window.removeEventListener("resize", resizeFunc)
+                            window.removeEventListener("resize", resizeFunc);
                         }
                         if (interval) clearTimeout(interval);
                         return;
@@ -160,7 +160,7 @@ class HC_HTML_slider_template
 
                         slides.forEach((slide, slideIndex) => {
                             if (slideIndex > og_slides.length - 1) slider.removeChild(slide);
-                        })
+                        });
                     };
                     window.addEventListener("resize", resizeFunc);
 
@@ -171,32 +171,32 @@ class HC_HTML_slider_template
 
                         slider.style.transform = `translateX(-${index * slideWidth}px)`;
 
-                        slider.appendChild(og_slides[slideToTransfer].cloneNode(true))
+                        slider.appendChild(og_slides[slideToTransfer].cloneNode(true));
                     };
 
                     await delay(<?= $first_timeout_speed ?>);
                     moveSlider();
                     setMoveInterval = () => {
-                        interval = setInterval(moveSlider, <?= $interval_speed+$transition_speed ?>);
+                        interval = setInterval(moveSlider, <?= $interval_speed + $transition_speed ?>);
                     };
 
                     setMoveInterval();
                 };
                 scrollFunc();
-                document.addEventListener("scroll", scrollFunc)
+                document.addEventListener("scroll", scrollFunc);
 
-                slider.addEventListener("mouseenter", ()=>{
-                    if(interval && !intervalClearedInMouseEnter) {
+                slider.addEventListener("mouseenter", () => {
+                    if (interval && !intervalClearedInMouseEnter) {
                         clearInterval(interval);
                         intervalClearedInMouseEnter = true;
                     }
-                })
-                slider.addEventListener("mouseleave", ()=>{
-                    if(setMoveInterval && intervalClearedInMouseEnter) {
+                });
+                slider.addEventListener("mouseleave", () => {
+                    if (setMoveInterval && intervalClearedInMouseEnter) {
                         setMoveInterval();
-                        intervalClearedInMouseEnter = false; 
-                    }
-                })
+                        intervalClearedInMouseEnter = false;
+                    };
+                });
             })
         </script>
 
