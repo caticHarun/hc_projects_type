@@ -72,7 +72,7 @@ if (!class_exists('hc_projects_type_plugin')) {
                     "supports" => ["title", "editor", "thumbnail",],
                     "has_archive" => true,
                     "rewrite" => [
-                        "slug" => __("projects")
+                        "slug" => __("projekte")
                     ]
                 ]
             );
